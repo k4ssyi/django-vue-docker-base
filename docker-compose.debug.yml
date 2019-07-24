@@ -1,0 +1,23 @@
+version: "3"
+services:
+  django:
+    build:
+      context: ./docker/django
+      dockerfile: Dockerfile
+    env_file: .env
+    command: "/var/www/html/docker/django/start-server.sh"
+    volumes:
+      - ./application:/var/www/html/application
+      - ./docker/django:/var/www/html/docker/django
+      - ./docker/etc:/var/www/html/docker/etc
+      - ./docker/var/sock:/var/sock
+      - ./docker/var/log/gunicorn:/var/log/gunicorn
+    ports:
+      - "8000:8000"
+    environment:
+      TZ: ${TZ}
+      DJANGO_ENV: ${DJANGO_ENV}
+      DATABASE_HOST: db
+    tty: true
+    depends_on:
+      - db
